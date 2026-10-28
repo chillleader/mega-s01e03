@@ -8,7 +8,7 @@ signature: Pavel Kotelevskii (chillleader)
 ---
 
 <script>
-  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
@@ -17,29 +17,30 @@ signature: Pavel Kotelevskii (chillleader)
 three problems. The queued parser fix closes one of them. The other two keep coming in after it ships.
 
 <Callout kind="warn">
-Not one issue. Each problem below has its own ticket, and each count is computed from the export.
+Not one issue. Each problem below has its own ticket.
 </Callout>
 
 ## What #4471 holds
 
-<ProblemTable
-  ticket={4471}
-  issues={{
-    parser: 'https://github.com/chillleader/mega-s01e03/issues/1',
-    hint: 'https://github.com/chillleader/mega-s01e03/issues/2',
-    shift: 'https://github.com/chillleader/mega-s01e03/issues/3',
-  }}
-/>
+<CauseTable ticket={4471} />
+
+The table counts by tenant and form. Read with the note under it, it holds three problems:
+
+| problem | where it is in the table | ticket |
+| --- | --- | --- |
+| `parser`: the shared parser reads day-first dates month first | the `parser` row, less the one-day moves in the note | [#1](https://github.com/chillleader/mega-s01e03/issues/1) |
+| `hint`: the booking-v3 form prints `MM/DD/YYYY` under its date field | the `hint` row, marked "no ticket of its own" | [#2](https://github.com/chillleader/mega-s01e03/issues/2) |
+| `shift`: invites land one day early | the one-day moves in the note | [#3](https://github.com/chillleader/mega-s01e03/issues/3) |
 
 ## How each report was placed
 
 1. **Repeats out first.** The ticket export comes in overlapping pages, so one id can appear twice. One id, one report.
-2. **One-day moves.** The desk already read some reports as a one-day move (`desk-notes.json`): Tuesday shown as
-   Monday, 12 May as 11 May, one meeting on two days for Lisbon and Toronto. Day and month are not swapped there, so
-   the parser cannot cause it. The incident table files them under `parser` by tenant; here they are their own problem.
-3. **The rest by tenant, not by intake tag.** Every tenant on file writes the day first. A report that came through
-   the booking form of a `booking-v3` tenant is `hint`: that form prints `MM/DD/YYYY` under its date field. Every
-   other report is `parser`. The intake tag is a guess from the reporter's browser and disagrees often.
+2. **By tenant, not by intake tag.** Every tenant on file writes the day first. A report that came through the
+   booking form of a `booking-v3` tenant is `hint`: that form prints `MM/DD/YYYY` under its date field. Every other
+   report is `parser`. The intake tag is a guess from the reporter's browser and disagrees often.
+3. **One-day moves apart.** The desk already read some reports as a one-day move (`desk-notes.json`): Tuesday shown
+   as Monday, 12 May as 11 May, one meeting on two days for Lisbon and Toronto. Day and month are not swapped there,
+   so the parser cannot cause it. The table files them under `parser` by tenant; they are their own problem.
 
 ## Why it matters
 
