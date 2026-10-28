@@ -24,13 +24,13 @@ Not one issue. Each problem below has its own ticket.
 
 <CauseTable ticket={4471} />
 
-The table counts by tenant and form. Read with the note under it, it holds three problems:
+One row per problem. Only `parser` is what #4471 was opened for; each problem now has its own ticket:
 
-| problem | where it is in the table | ticket |
-| --- | --- | --- |
-| `parser`: the shared parser reads day-first dates month first | the `parser` row, less the one-day moves in the note | [#1](https://github.com/chillleader/mega-s01e03/issues/1) |
-| `hint`: the booking-v3 form prints `MM/DD/YYYY` under its date field | the `hint` row, marked "no ticket of its own" | [#2](https://github.com/chillleader/mega-s01e03/issues/2) |
-| `shift`: invites land one day early | the one-day moves in the note | [#3](https://github.com/chillleader/mega-s01e03/issues/3) |
+| problem | ticket |
+| --- | --- |
+| `parser`: the shared parser reads day-first dates month first | [#1](https://github.com/chillleader/mega-s01e03/issues/1) |
+| `hint`: the booking-v3 form prints `MM/DD/YYYY` under its date field | [#2](https://github.com/chillleader/mega-s01e03/issues/2) |
+| `shift`: invites land one day early | [#3](https://github.com/chillleader/mega-s01e03/issues/3) |
 
 ## How each report was placed
 
@@ -40,7 +40,8 @@ The table counts by tenant and form. Read with the note under it, it holds three
    report is `parser`. The intake tag is a guess from the reporter's browser and disagrees often.
 3. **One-day moves apart.** The desk already read some reports as a one-day move (`desk-notes.json`): Tuesday shown
    as Monday, 12 May as 11 May, one meeting on two days for Lisbon and Toronto. Day and month are not swapped there,
-   so the parser cannot cause it. The table files them under `parser` by tenant; they are their own problem.
+   so the parser cannot cause it. `causes.ts` used to file them under `parser` by tenant; it now places them in
+   `shift`, before it looks at the tenant.
 
 ## Why it matters
 
