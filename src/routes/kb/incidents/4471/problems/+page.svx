@@ -1,0 +1,59 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: Pavel Kotelevskii
+status: open
+reviewed: 2026-10-28
+signature: Pavel Kotelevskii (chillleader)
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one bug, one fix queued. Read report by report, it holds
+three problems. The queued parser fix closes one of them. The other two keep coming in after it ships.
+
+<Callout kind="warn">
+Not one issue. Each problem below has its own ticket, and each count is computed from the export.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable
+  ticket={4471}
+  issues={{
+    parser: 'https://github.com/chillleader/mega-s01e03/issues/1',
+    hint: 'https://github.com/chillleader/mega-s01e03/issues/2',
+    shift: 'https://github.com/chillleader/mega-s01e03/issues/3',
+  }}
+/>
+
+## How each report was placed
+
+1. **Repeats out first.** The ticket export comes in overlapping pages, so one id can appear twice. One id, one report.
+2. **One-day moves.** The desk already read some reports as a one-day move (`desk-notes.json`): Tuesday shown as
+   Monday, 12 May as 11 May, one meeting on two days for Lisbon and Toronto. Day and month are not swapped there, so
+   the parser cannot cause it. The incident table files them under `parser` by tenant; here they are their own problem.
+3. **The rest by tenant, not by intake tag.** Every tenant on file writes the day first. A report that came through
+   the booking form of a `booking-v3` tenant is `hint`: that form prints `MM/DD/YYYY` under its date field. Every
+   other report is `parser`. The intake tag is a guess from the reporter's browser and disagrees often.
+
+## Why it matters
+
+- **parser** is the fix already queued. Ship it.
+- **hint** survives that fix: the form tells people to type month first and then reads the date day first. Change the
+  hint on `booking-v3` to the tenant's order.
+- **shift** survives both: the dates are read right and still land a day early. Look at time zones and DST where an
+  invite's date is turned into a timestamp.
+
+## Lessons
+
+- Matching on subject merged three causes into one ticket ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+  A count of reports says nothing about how many problems they hold.
+- The desk saw the one-day moves and wrote them down, then filed them where the tenant pointed. A note that disagrees
+  with the cause is a new problem, not a footnote.
+
+<RenderStamp {signature} />
