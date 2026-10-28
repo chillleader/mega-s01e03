@@ -1,5 +1,4 @@
 // How the support desk tells which cause a report belongs to. Pages explain it; this file is what runs.
-import notes from '#lib/data/desk-notes.json';
 
 // `meta.intakeTag` is what intake guessed from the reporter's browser, the moment the report came
 // in. It is a guess. The cause depends on the tenant: where they are, and which booking form they
@@ -18,12 +17,8 @@ export type Report = {
 
 export type Tenant = { handle: string; name: string; locale: string; form: 'booking-v2' | 'booking-v3' };
 
-export type Cause = 'parser' | 'hint' | 'shift';
-export const CAUSES: readonly Cause[] = ['parser', 'hint', 'shift'];
-
-// Reports the desk read as a one-day move (desk-notes.json): day and month kept, the date one day
-// early. No flip, so neither the parser nor the hint did it: that is `shift`, whatever the tenant.
-const ONE_DAY_MOVE = new Set<string>(notes.oneDayMove);
+export type Cause = 'parser' | 'hint';
+export const CAUSES: readonly Cause[] = ['parser', 'hint'];
 
 // What each booking form prints under its date field.
 const DATE_HINT: Record<Tenant['form'], string> = {
@@ -42,8 +37,7 @@ export function dayFirst(locale: string): boolean {
 // The shared parser reads every date month first. A day-first tenant's dates come out flipped:
 // that is `parser`. Through booking-v3's form the tenant's people type what the hint tells them,
 // month first, and the form reads it the tenant's way: that is `hint`, a different bug.
-export function causeOf(r: Pick<Report, 'channel'> & { id?: string }, t: Tenant | undefined): Cause | null {
-  if (r.id && ONE_DAY_MOVE.has(r.id)) return 'shift';
+export function causeOf(r: Pick<Report, 'channel'>, t: Tenant | undefined): Cause | null {
   if (!t || !dayFirst(t.locale)) return null;
   return r.channel === 'form' && DATE_HINT[t.form].startsWith('MM') ? 'hint' : 'parser';
 }
