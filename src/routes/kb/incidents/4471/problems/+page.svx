@@ -1,9 +1,9 @@
 ---
 layout: runbook
-title: '#4471 · three problems, not one'
+title: '#4471 · two problems, not one'
 owner: Pavel Kotelevskii
 status: open
-reviewed: 2026-10-28
+reviewed: 2026-10-29
 signature: Pavel Kotelevskii (chillleader)
 ---
 
@@ -13,8 +13,8 @@ signature: Pavel Kotelevskii (chillleader)
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one bug, one fix queued. Read report by report, it holds
-three problems. The queued parser fix closes one of them. The other two keep coming in after it ships.
+[#4471](/kb/incidents/4471) is marked known: one bug, one fix queued. Its own table shows two causes. The queued
+parser fix closes one of them. The other keeps coming in after it ships.
 
 <Callout kind="warn">
 Not one issue. Each problem below has its own ticket.
@@ -24,13 +24,12 @@ Not one issue. Each problem below has its own ticket.
 
 <CauseTable ticket={4471} />
 
-The table counts by tenant and form. Read with the note under it, it holds three problems:
+One ticket per row:
 
-| problem | where it is in the table | ticket |
-| --- | --- | --- |
-| `parser`: the shared parser reads day-first dates month first | the `parser` row, the one-day moves in the note included | [#1](https://github.com/chillleader/mega-s01e03/issues/1) |
-| `hint`: the booking-v3 form prints `MM/DD/YYYY` under its date field | the `hint` row, marked "no ticket of its own" | [#2](https://github.com/chillleader/mega-s01e03/issues/2) |
-| `shift`: invites land one day early | the one-day moves in the note | [#3](https://github.com/chillleader/mega-s01e03/issues/3) |
+| problem | row | reports | ticket |
+| --- | --- | --- | --- |
+| `parser`: the shared parser reads day-first dates month first | `parser` | 379 | [#1](https://github.com/chillleader/mega-s01e03/issues/1) |
+| `hint`: the booking-v3 form prints `MM/DD/YYYY` under its date field | `hint`, marked "no ticket of its own" | 33 | [#2](https://github.com/chillleader/mega-s01e03/issues/2) |
 
 ## How each report was placed
 
@@ -38,23 +37,23 @@ The table counts by tenant and form. Read with the note under it, it holds three
 2. **By tenant, not by intake tag.** Every tenant on file writes the day first. A report that came through the
    booking form of a `booking-v3` tenant is `hint`: that form prints `MM/DD/YYYY` under its date field. Every other
    report is `parser`. The intake tag is a guess from the reporter's browser and disagrees often.
-3. **One-day moves apart.** The desk already read some reports as a one-day move (`desk-notes.json`): Tuesday shown
-   as Monday, 12 May as 11 May, one meeting on two days for Lisbon and Toronto. Day and month are not swapped there,
-   so the parser cannot cause it. The table files them under `parser` by tenant; they are their own problem.
 
 ## Why it matters
 
 - **parser** is the fix already queued. Ship it.
 - **hint** survives that fix: the form tells people to type month first and then reads the date day first. Change the
   hint on `booking-v3` to the tenant's order.
-- **shift** survives both: the dates are read right and still land a day early. Look at time zones and DST where an
-  invite's date is turned into a timestamp.
+
+## Open question
+
+The note under the table: 5 `parser` reports read as a one-day move (`desk-notes.json`), Tuesday shown as Monday,
+12 May as 11 May. Day and month are not swapped there. They are counted in #1. If they keep coming after the parser
+fix ships, look at time zones and DST where an invite's date is turned into a timestamp.
 
 ## Lessons
 
-- Matching on subject merged three causes into one ticket ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
-  A count of reports says nothing about how many problems they hold.
-- The desk saw the one-day moves and wrote them down, then filed them where the tenant pointed. A note that disagrees
-  with the cause is a new problem, not a footnote.
+- A count of reports says nothing about how many problems they hold. 412 reports with 12 different subject lines
+  went into one ticket, and every subject line carries reports of both causes.
+- Count with the desk's own table. A ticket the desk cannot find a row for is a ticket it cannot match.
 
 <RenderStamp {signature} />
