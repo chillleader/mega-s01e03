@@ -4,7 +4,7 @@ title: '#4471 · two problems, not one'
 owner: Pavel Kotelevskii
 status: open
 reviewed: 2026-10-29
-signature: Pavel Kotelevskii (chillleader)
+signature: v1.eyJzdWIiOiIzNzk5IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyNzI3ODAsImV4cCI6MTc5MzM1OTE4MH0.-XSSSTPacL0vDNiIFdh95PwqNgNQa-6vWdya7AG246c
 ---
 
 <script>
